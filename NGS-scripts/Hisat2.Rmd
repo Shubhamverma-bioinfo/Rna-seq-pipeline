@@ -1,0 +1,72 @@
+---
+title: "NGS-Analysis"
+output: html_notebook
+---
+
+```{bash}
+wget ftp://ftp.ccb.jhu.edu/pub/RNAseq_protocol/chrX_data.tar.gz
+tar xvzf chrX_data.tar.gz
+
+hisat2-build -p 4 GCF_human_chrX_genomic.fna human_chrX
+ 
+hisat2 -p 8 --dta -x chrX_data/indexes/chrX_tran -1 chrX_data/samples/ERR188044_chrX_1.fastq.gz -2 chrX_data/samples/ERR188044_chrX_2.fastq.gz -S ERR188044_chrX.sam
+```
+
+```{bash}
+#!/usr/bin/bash
+
+#bash script for hisat2; align all .fastq.gz files to indexed reference genome to generate .sam files
+SAMPLES="ERR188044 ERR188104 ERR188234 ERR188245 ERR188257 ERR188273 ERR188337 ERR188383 ERR188401 ERR188428 ERR188454 ERR204916"
+
+for SAMPLE in $SAMPLES; do
+    hisat2 -p 11 --dta -x ~/chrX_data/indexes/chrX_tran -1 ~/chrX_data/samples/${SAMPLE}_chrX_1.fastq.gz -2 ~/chrX_data/samples/${SAMPLE}_chrX_2.fastq.gz -S ${SAMPLE}_chrX.sam
+done
+
+#this works
+```
+
+```{bash}
+ samtools sort -@ 8 -o ERR188044_chrX.bam ERR188044_chrX.sam
+```
+
+
+
+```{bash}
+#!/usr/bin/bash
+
+#bash script for samtools; convert .sam files to .bam files
+
+SAMPLES="ERR188044 ERR188104 ERR188234 ERR188245 ERR188257 ERR188273 ERR188337 ERR188383 ERR188401 ERR188428 ERR188454 ERR204916"
+
+for SAMPLE in $SAMPLES; do
+    samtools sort -@ 11 -o ${SAMPLE}_chrX.bam ${SAMPLE}_chrX.sam
+done
+
+#this works
+```
+
+```{bash}
+# for IGV visulization for bam file
+samtools index ERR188044_chrX.bam ERR188044_chrX.bam.bai
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
